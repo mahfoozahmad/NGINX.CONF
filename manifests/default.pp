@@ -50,8 +50,7 @@ class nginx-dev {
         notify => Exec['sed_png'],
     }
 
-# As of 2 Jun 2013 at 21:55 EST, the logo png URL referenced in the html in Exec['wget']
-# does not serve a valid png file. There is this:
+
 # http://www.puppetlabs.com/wp-content/uploads/2010/12/PL_logo_vertical_RGB_sm.png
     exec { 'sed_png':
         command => "/bin/sed -i 's/Puppet-Labs-Logo-Vertical.png/PL_logo_vertical_RGB_sm.png/' /tmp/nginx/index.html",
@@ -59,7 +58,8 @@ class nginx-dev {
         require => Exec['wget'],
     }
 
-# this solution gets a fraction more portable if I do this ugly thing:
+#  By performing the following the solution gets more portable.
+
     $conf = "user www-data;
 worker_processes 1;
 
@@ -87,7 +87,11 @@ index index.html;
 }
 }
 }"
-# pull nginx.conf off the vagrant root, restart the service if it's running
+
+
+# After pulling nginx.conf off the vagrant root and restarting the service if it's running
+
+
     file { 'nginx.conf':
         path => '/etc/nginx/nginx.conf',
         content => "$conf",
